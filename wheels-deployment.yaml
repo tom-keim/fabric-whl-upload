@@ -27,5 +27,7 @@ stages:
 
                     - script: |
                         cd $(Build.SourcesDirectory)
-                        python -m  pip install fabric-cicd
+                        python -m  pip install --upgrade pip wheel
+                        python setup.py bdist_wheel
                       displayName: 'Install dependencies'
+                      
