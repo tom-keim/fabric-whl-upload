@@ -114,9 +114,7 @@ def _fabric_api_request(request_type: str, token: str, request_url: str, files: 
             time.sleep(3)
         else:
             msg = f"Fabric API request failed after {max_retries} attempts with status code {response.status_code}: {response.text}. URL: {request_url}"
-            raise Exception(
-                msg
-            )
+            raise Exception(msg)
     return None
 
 
@@ -159,11 +157,8 @@ def _get_fabric_environment_custom_libraries(token: str, workspace_id: str, envi
     """
     try:
         return _fabric_api_request("GET", token, f"workspaces/{workspace_id}/environments/{environment_id}/staging/libraries")
-    except requests.HTTPError as e:
-        if e.response.status_code == 404:
-            # If the environment does not have any custom libraries, return an empty dict
-            return {"customLibraries": {"wheelFiles": []}}
-        raise e
+    except Exception:
+        return {"customLibraries": {"wheelFiles": []}}
 
 
 def _delete_fabric_environment_custom_library(token: str, workspace_id: str, environment_id: str, library_name: str) -> dict:
