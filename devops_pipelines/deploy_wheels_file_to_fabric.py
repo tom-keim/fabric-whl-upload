@@ -98,7 +98,7 @@ def _fabric_api_request(request_type: str, token: str, request_url: str, files: 
         }
         headers["Authorization"] = f"Bearer {token}"
 
-    request_url = f"https://api.fabric.microsoft.com/{request_url.lstrip('/')}"
+    request_url = f"https://api.fabric.microsoft.com/v1/{request_url.lstrip('/')}"
     for attempt in range(1, max_retries + 1):
         response = requests.request(
             request_type,
