@@ -108,7 +108,7 @@ def _fabric_api_request(request_type: str, token: str, request_url: str, files: 
         )
         if response.status_code == 200:
             return response.json()
-        print(response.text())
+        print(response.text)
         if attempt < max_retries:
             print(
                 f"Request failed (attempt {attempt}), retrying in 3 seconds...")
