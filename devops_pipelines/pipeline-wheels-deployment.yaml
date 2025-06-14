@@ -30,6 +30,7 @@ stages:
                         python -m pip install build
                         rm -rf ./dist # Clean previous builds
                         python -m build
+                        cd ./dist
                         WHEEL_FILE=$(find wheels -name "*.whl" -print -quit)
                         echo "##vso[task.setvariable variable=WHEEL_FILE]$WHEEL_FILE"
                         echo "Wheel file path: $WHEEL_FILE"
