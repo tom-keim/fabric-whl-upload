@@ -186,16 +186,15 @@ def _delete_fabric_environment_custom_library(token: str, workspace_id: str, env
 
 
 def _upload_fabric_environment_custom_library(token: str, workspace_id: str, environment_id: str, file_path: str) -> dict:
-    with Path(file_path).open('rb') as file:
-        files = {'file': (Path(file_path).name, file,
-                          'application/octet-stream')}
-        print(files)
-        response = _fabric_api_request("POST", token,
-                                       f"workspaces/{workspace_id}/environments/{environment_id}/staging/libraries",
-                                       files=files,
-                                       headers={}
-                                       )
-        return response.json()
+    file = Path(file_path)
+    files = {'file': (Path(file_path).name, file.open('rb'))}
+    print(files)
+    response = _fabric_api_request("POST", token,
+                                   f"workspaces/{workspace_id}/environments/{environment_id}/staging/libraries",
+                                   files=files,
+                                   headers={}
+                                   )
+    return response.json()
 
 
 def _delete_fabric_environment_published_custom_libraries(token: str, workspace_id: str, environment_id: str) -> None:
