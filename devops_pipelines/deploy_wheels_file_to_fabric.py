@@ -188,7 +188,7 @@ def _upload_fabric_environment_custom_library(token: str, workspace_id: str, env
     with Path(file_path).open('rb') as file:
         files = {'file': (Path(file_path).name, file,
                           'application/octet-stream')}
-
+        print(files)
         response = _fabric_api_request("POST", token,
                                        f"workspaces/{workspace_id}/environments/{environment_id}/staging/libraries",
                                        files=files,
