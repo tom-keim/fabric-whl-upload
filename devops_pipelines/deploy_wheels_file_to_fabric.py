@@ -100,7 +100,7 @@ def _fabric_api_request(request_type: str, token: str, request_url: str, files: 
 
     request_url = f"https://api.fabric.microsoft.com/v1/{request_url.lstrip('/')}"
     for attempt in range(1, max_retries + 1):
-        print(files)
+
         response = requests.request(
             request_type,
             request_url,
@@ -108,10 +108,8 @@ def _fabric_api_request(request_type: str, token: str, request_url: str, files: 
             files=files,
         )
         if response.status_code == 200:
-            if files is None:
-                return response.json()
-            return {}  # For file uploads, we return an empty dict as the response is not JSON
-        print(response.text)
+            return response.json()
+
         if attempt < max_retries:
             print(
                 f"Request failed (attempt {attempt}), retrying in 3 seconds...")
@@ -187,16 +185,15 @@ def _delete_fabric_environment_custom_library(token: str, workspace_id: str, env
                                )
 
 
-def _upload_fabric_environment_custom_library(token: str, workspace_id: str, environment_id: str, file_path: str) -> dict:
+def _upload_fabric_environment_custom_library(token: str, workspace_id: str, environment_id: str, file_path: str) -> None:
     file = Path(file_path)
     files = {'file': (Path(file_path).name, file.open('rb'))}
-    print(files)
-    response = _fabric_api_request("POST", token,
-                                   f"workspaces/{workspace_id}/environments/{environment_id}/staging/libraries",
-                                   files=files,
-                                   headers={}
-                                   )
-    return response.json()
+
+    _fabric_api_request("POST", token,
+                        f"workspaces/{workspace_id}/environments/{environment_id}/staging/libraries",
+                        files=files,
+                        headers={}
+                        )
 
 
 def _delete_fabric_environment_published_custom_libraries(token: str, workspace_id: str, environment_id: str) -> None:
