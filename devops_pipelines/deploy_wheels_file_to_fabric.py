@@ -108,7 +108,9 @@ def _fabric_api_request(request_type: str, token: str, request_url: str, files: 
             files=files,
         )
         if response.status_code == 200:
-            return response.json()
+            if files is None:
+                return response.json()
+            return {}  # For file uploads, we return an empty dict as the response is not JSON
         print(response.text)
         if attempt < max_retries:
             print(
