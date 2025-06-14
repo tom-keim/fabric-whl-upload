@@ -27,8 +27,10 @@ stages:
 
                     - script: |
                         cd $(Build.SourcesDirectory)
-                        python -m  pip install build
+                        python -m pip install build
+                        rm -rf ./dist # Clean previous builds
                         python -m build
-                        ls ./dist
-                      displayName: 'Install dependencies'
+                        WHEEL_FILE=$(find wheels -name "*.whl" -print -quit)
+                        echo "##vso[task.setvariable variable=WHEEL_FILE]$WHEEL_FILE"
+                        echo "Wheel file path: $WHEEL_FILE"
                       
