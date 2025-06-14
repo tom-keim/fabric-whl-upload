@@ -31,7 +31,7 @@ stages:
                         rm -rf ./dist # Clean previous builds
                         python -m build
                         cd ./dist
-                        WHEEL_FILE=$(find . -name "*.whl" -print -quit)
+                        WHEEL_FILE=$(find "$(pwd)" -name "*.whl" -print -quit)                    
                         echo "##vso[task.setvariable variable=WHEEL_FILE]$WHEEL_FILE"
                         echo "Wheel file path: $WHEEL_FILE"
                     - task: PythonScript@0
