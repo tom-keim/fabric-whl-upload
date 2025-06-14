@@ -38,3 +38,10 @@ stages:
                       inputs:
                         scriptSource: 'filePath'
                         scriptPath: '$(Build.SourcesDirectory)/devops_pipelines/deploy_wheels_file_to_fabric.py'
+                      env:
+                        FABRIC_TENANT_ID: $(FABRIC_TENANT_ID)
+                        FABRIC_CLIENT_ID: $(FABRIC_CLIENT_ID)
+                        FABRIC_CLIENT_SECRET: $(FABRIC_CLIENT_SECRET)
+                        FABRIC_ENVIRONMENT_ID: $(FABRIC_ENVIRONMENT_ID)
+                        FABRIC_WORKSPACE_ID: $(FABRIC_WORKSPACE_ID)
+                        FABRIC_FILE_PATH: $(WHEEL_FILE)
