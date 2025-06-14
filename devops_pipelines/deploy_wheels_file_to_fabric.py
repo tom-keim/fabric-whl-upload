@@ -100,6 +100,7 @@ def _fabric_api_request(request_type: str, token: str, request_url: str, files: 
 
     request_url = f"https://api.fabric.microsoft.com/v1/{request_url.lstrip('/')}"
     for attempt in range(1, max_retries + 1):
+        print(files)
         response = requests.request(
             request_type,
             request_url,
