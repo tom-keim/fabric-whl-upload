@@ -45,3 +45,4 @@ stages:
                         FABRIC_ENVIRONMENT_ID: $(FABRIC_ENVIRONMENT_ID)
                         FABRIC_WORKSPACE_ID: $(FABRIC_WORKSPACE_ID)
                         FABRIC_FILE_PATH: $(WHEEL_FILE)
+                        PYTHONUNBUFFERED: '1'
