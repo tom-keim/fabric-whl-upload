@@ -1,0 +1,34 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool: Local
+
+stages:
+  - stage: Deploy
+    displayName: 'Deploy Stage'
+    jobs:
+      - deployment: DeployJob
+        displayName: 'Sequential Deployment'
+        environment: 'FABRIC-DEV'
+        strategy:
+            runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+                    #- task: UsePythonVersion@0
+                    #  inputs:
+                    #    versionSpec: '3.11'
+                    #  displayName: 'Use Python 3.11'
+
+                    - script: |
+                        cd $(Build.SourcesDirectory)
+                        python -m  pip install build
+                        python -m build
+                        ls ./dist
+                      displayName: 'Install dependencies'
+                      

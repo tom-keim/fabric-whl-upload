@@ -1,4 +1,6 @@
-from setuptools import setup, find_packages
+"""Setup script for the hello-world Python package."""
+
+from setuptools import find_packages, setup
 
 setup(
     name="hello-world",
