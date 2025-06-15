@@ -111,8 +111,6 @@ def _fabric_api_request(request_type: str, token: str, request_url: str, files: 
             return response.json()
 
         if attempt < max_retries:
-            print(
-                f"Request failed (attempt {attempt}), retrying in 3 seconds...")
             time.sleep(3)
         else:
             msg = f"Fabric API request failed after {max_retries} attempts with status code {response.status_code}: {response.text}. URL: {request_url}"
@@ -212,21 +210,6 @@ def _upload_fabric_environment_custom_library(token: str, workspace_id: str, env
 
 
 def _delete_fabric_environment_published_custom_libraries(token: str, workspace_id: str, environment_id: str, package_name: str) -> None:
-    """
-    Deletes all published custom wheel libraries in a Fabric environment that match the specified package name.
-
-    This function retrieves the list of custom wheel files associated with the given Fabric environment and deletes
-    any libraries whose names start with the provided package name.
-
-    Args:
-        token (str): The authentication token used for API requests.
-        workspace_id (str): The ID of the Fabric workspace.
-        environment_id (str): The ID of the Fabric environment.
-        package_name (str): The name prefix of the package(s) to delete.
-
-    Returns:
-        None
-    """
     libraries = _get_fabric_environment_custom_libraries(
         token, workspace_id, environment_id)
 
@@ -236,8 +219,8 @@ def _delete_fabric_environment_published_custom_libraries(token: str, workspace_
                 print(
                     f"Deleting custom library {library_name} from environment {environment_id}")
                 # Delete the custom library
-                _delete_fabric_environment_custom_library(
-                    token, workspace_id, environment_id, library_name)
+            _delete_fabric_environment_custom_library(
+                token, workspace_id, environment_id, library_name)
 
 
 def _cancel_fabric_environment_publish(token: str, workspace_id: str, environment_id: str) -> None:
@@ -274,7 +257,8 @@ def _publish_fabric_environment(token: str, workspace_id: str, environment_id: s
     _fabric_api_request("POST", token,
                         f"workspaces/{workspace_id}/environments/{environment_id}/staging/publish"
                         )
-    print(f"Environment {environment_id} published successfully")
+    print(
+        f"Environment {environment_id} publish started successfully. Waiting for it to finish...")
 
 
 def _is_fabric_environment_published(token: str, workspace_id: str, environment_id: str, allow_cancelled: bool = False) -> bool:
