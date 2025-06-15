@@ -186,6 +186,21 @@ def _delete_fabric_environment_custom_library(token: str, workspace_id: str, env
 
 
 def _upload_fabric_environment_custom_library(token: str, workspace_id: str, environment_id: str, file_path: str) -> None:
+    """
+    Uploads a custom library file to a specified Fabric environment.
+
+    Args:
+        token (str): The authentication token for the Fabric API.
+        workspace_id (str): The ID of the workspace where the environment resides.
+        environment_id (str): The ID of the environment to which the library will be uploaded.
+        file_path (str): The local file path of the library to upload.
+
+    Returns:
+        None
+
+    Raises:
+        Any exceptions raised by the underlying _fabric_api_request function.
+    """
     file = Path(file_path)
     files = {'file': (Path(file_path).name, file.open('rb'))}
 
@@ -196,13 +211,33 @@ def _upload_fabric_environment_custom_library(token: str, workspace_id: str, env
                         )
 
 
-def _delete_fabric_environment_published_custom_libraries(token: str, workspace_id: str, environment_id: str) -> None:
+def _delete_fabric_environment_published_custom_libraries(token: str, workspace_id: str, environment_id: str, package_name: str) -> None:
+    """
+    Deletes all published custom wheel libraries in a Fabric environment that match the specified package name.
+
+    This function retrieves the list of custom wheel files associated with the given Fabric environment and deletes
+    any libraries whose names start with the provided package name.
+
+    Args:
+        token (str): The authentication token used for API requests.
+        workspace_id (str): The ID of the Fabric workspace.
+        environment_id (str): The ID of the Fabric environment.
+        package_name (str): The name prefix of the package(s) to delete.
+
+    Returns:
+        None
+    """
     libraries = _get_fabric_environment_custom_libraries(
         token, workspace_id, environment_id)
+
     if "customLibraries" in libraries and "wheelFiles" in libraries["customLibraries"]:
         for library_name in libraries["customLibraries"]['wheelFiles']:
-            _delete_fabric_environment_custom_library(
-                token, workspace_id, environment_id, library_name)
+            if library_name.startswith(package_name):
+                print(
+                    f"Deleting custom library {library_name} from environment {environment_id}")
+                # Delete the custom library
+                _delete_fabric_environment_custom_library(
+                    token, workspace_id, environment_id, library_name)
 
 
 def _cancel_fabric_environment_publish(token: str, workspace_id: str, environment_id: str) -> None:
@@ -338,8 +373,9 @@ def run_wheel_deployment_to_fabric(token: str, workspace_id: str, environment_id
                 token, workspace_id, environment_id, allow_cancelled=True)
 
         # We need to delete the custom libraries already in the environment
+        package_name = Path(file_path).name.split('-')[0]
         _delete_fabric_environment_published_custom_libraries(
-            token, workspace_id, environment_id)
+            token, workspace_id, environment_id, package_name)
         _upload_fabric_environment_custom_library(
             token, workspace_id, environment_id, file_path)
 
