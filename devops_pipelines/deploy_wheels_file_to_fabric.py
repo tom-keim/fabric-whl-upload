@@ -363,13 +363,6 @@ if __name__ == "__main__":
     ENVIRONMENT_ID = os.getenv("FABRIC_ENVIRONMENT_ID")
     FILE_PATH = os.getenv("FABRIC_FILE_PATH")
 
-    print("CLIENT_ID:", CLIENT_ID)
-    print("CLIENT_SECRET:", CLIENT_SECRET)
-    print("TENANT_ID:", TENANT_ID)
-    print("WORKSPACE_ID:", WORKSPACE_ID)
-    print("ENVIRONMENT_ID:", ENVIRONMENT_ID)
-    print("FILE_PATH:", FILE_PATH)
-
     if not all([CLIENT_ID, CLIENT_SECRET, TENANT_ID, WORKSPACE_ID, ENVIRONMENT_ID, FILE_PATH]):
         error_message = "One or more environment variables are not set."
         raise ValueError(error_message)
