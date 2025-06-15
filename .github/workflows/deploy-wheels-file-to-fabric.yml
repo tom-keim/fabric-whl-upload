@@ -1,0 +1,42 @@
+name: Deploy Wheels to Fabric
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install build and clean dist
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+          rm -rf ./dist
+      - name: Build wheel
+        run: |
+          python -m build
+      - name: Find wheel file
+        id: find_wheel
+        run: |
+          WHEEL_FILE=$(find $(pwd)/dist -name "*.whl" -print -quit)
+          echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
+          echo "Wheel file path: $WHEEL_FILE"
+      - name: Deploy wheel to Fabric
+        env:
+          FABRIC_TENANT_ID: ${{ secrets.FABRIC_TENANT_ID }}
+          FABRIC_CLIENT_ID: ${{ secrets.FABRIC_CLIENT_ID }}
+          FABRIC_CLIENT_SECRET: ${{ secrets.FABRIC_CLIENT_SECRET }}
+          FABRIC_ENVIRONMENT_ID: ${{ secrets.FABRIC_ENVIRONMENT_ID }}
+          FABRIC_WORKSPACE_ID: ${{ secrets.FABRIC_WORKSPACE_ID }}
+          FABRIC_FILE_PATH: ${{ env.WHEEL_FILE }}
+          PYTHONUNBUFFERED: '1'
+        run: |
+          python devops_pipelines/deploy_wheels_file_to_fabric.py
