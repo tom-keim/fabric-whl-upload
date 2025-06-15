@@ -1,16 +1,2 @@
-# Hello World Python Package
-
-This is a dummy Python package that prints "Hello, World!".
-
-## Installation
-
-```bash
-pip install .
-```
-
-## Usage
-
-```python
-from hello_world import say_hello
-say_hello()
-```
+# Upload Wheels file to Fabric Environment with Azure Devops or Github
+Demo Project for my blogpost how to upload a wheels file with an Azure Devops pipeline or Github action to a Fabric Environment 
